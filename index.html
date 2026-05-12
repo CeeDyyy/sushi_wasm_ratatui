@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ratatui Web Cartridge</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.2.1/css/xterm.min.css" />
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; background-color: #1e1e1e; overflow: hidden; }
+        #terminal-container { width: 100vw; height: 100vh; padding: 10px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div id="terminal-container"></div>
+
+    <script type="module">
+        // 1. Import from the classic, universally cached package names
+        import { Terminal } from 'https://esm.sh/xterm@5.2.1';
+        import { FitAddon } from 'https://esm.sh/xterm-addon-fit@0.7.0';
+        
+        // 2. Import our compiled WebAssembly module
+        import init, { AppState } from './pkg/sushi_wasm_ratatui.js';
+
+        async function boot() {
+            // Set up the terminal emulator
+            const term = new Terminal({
+                cursorBlink: true,
+                fontFamily: '"Fira Code", Tahoma, monospace',
+                theme: { background: '#1e1e1e' }
+            });
+            const fitAddon = new FitAddon();
+            term.loadAddon(fitAddon);
+            
+            term.open(document.getElementById('terminal-container'));
+            fitAddon.fit();
+
+            term.writeln('\x1b[33mLoading WebAssembly Engine...\x1b[0m');
+
+            // Load the compiled Rust WASM binary
+            await init();
+            term.clear();
+
+            // Initialize our Rust application state
+            const app = AppState.new();
+
+            // The Game Loop
+            function renderFrame() {
+                const frame_output = app.render();
+                term.write('\x1bc' + frame_output); 
+                requestAnimationFrame(renderFrame);
+            }
+
+            // Pass keystrokes from JS into Rust
+            term.onData(data => {
+                app.handle_input(data);
+            });
+
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                fitAddon.fit();
+            });
+
+            // Start the loop!
+            renderFrame();
+        }
+        
+        boot();
+    </script>
+</body>
+</html>
