@@ -1,0 +1,65 @@
+# Sushi WASM Ratatui 🍣
+
+A WebAssembly-powered Text User Interface (TUI) sushi ordering cart, built with Rust and Ratatui, running entirely in the browser.
+
+## Overview
+
+This project demonstrates how to compile a Rust-based TUI application into a WebAssembly "cartridge" and run it locally in the browser using `xterm.js` as the terminal emulator. It's a lightweight, interactive playground that requires no backend server or host-machine Rust installation.
+
+## Features
+
+* **Interactive TUI:** Navigate menus and order items using keyboard controls (Up/Down/Enter/Backspace) with dynamic price calculation.
+* **WebAssembly Core:** The application logic is written in Rust and compiled to WASM for lightning-fast, client-side execution.
+* **xterm.js Integration:** Renders the TUI directly in the browser with full ANSI color support and custom font handling.
+* **Containerized Workflow:** Uses a multi-stage Docker and Docker Compose setup to handle the heavy Rust compilation and serve the static files, keeping your local environment clean.
+* **Thai Language Support:** Demonstrates text alignment and rendering of Thai characters alongside English using a customized font stack.
+
+## Prerequisites
+
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose)
+
+## Getting Started
+
+1.  **Clone or create the repository directory:**
+    ```bash
+    git clone <your-repo-url>
+    cd sushi_wasm_ratatui
+    ```
+
+2.  **Build and Run (The Magic Command):**
+    Using Docker Compose, you can compile the WebAssembly cartridge and spin up the Nginx web server in a single command:
+    ```bash
+    docker compose up -d --build
+    ```
+
+3.  **Open the application:**
+    Navigate to `http://localhost:8080` in your web browser.
+
+4.  **Stopping the application:**
+    When you are finished playing, you can gracefully shut down the container:
+    ```bash
+    docker compose down
+    ```
+
+## Controls
+
+* **Up Arrow:** Move cursor up the menu.
+* **Down Arrow:** Move cursor down the menu.
+* **Enter:** Add the selected item to your order receipt.
+* **Backspace:** Undo/Remove the last item from your order receipt.
+
+## Project Structure
+
+* `Cargo.toml`: Rust package configuration (`sushi_wasm_ratatui`) and dependencies.
+* `src/lib.rs`: The core application logic written in Rust, utilizing Ratatui's pure-memory `TestBackend`.
+* `index.html`: The HTML frontend that loads `xterm.js` via ESM and boots up the compiled WebAssembly module.
+* `Dockerfile`: Multi-stage Docker configuration for building the WASM and serving it via Nginx.
+* `docker-compose.yml`: Automates the build, port mapping, and deployment process.
+
+## Technologies Used
+
+* **Rust:** Systems programming language for core logic.
+* **Ratatui:** Rust library for building Text User Interfaces.
+* **WebAssembly (WASM):** Binary instruction format for running code natively in the browser.
+* **xterm.js:** JavaScript-based terminal emulator.
+* **Docker / Compose:** Containerization platform for consistent building and serving.

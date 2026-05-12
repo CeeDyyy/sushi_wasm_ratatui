@@ -1,0 +1,15 @@
+{
+  "name": "sushi_wasm_ratatui",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "sushi_wasm_ratatui_bg.wasm",
+    "sushi_wasm_ratatui.js",
+    "sushi_wasm_ratatui.d.ts"
+  ],
+  "main": "sushi_wasm_ratatui.js",
+  "types": "sushi_wasm_ratatui.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
