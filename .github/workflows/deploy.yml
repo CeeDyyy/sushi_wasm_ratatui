@@ -34,6 +34,8 @@ jobs:
           mkdir dist
           cp index.html dist/
           cp -r pkg dist/
+          rm dist/pkg/.gitignore   # <-- Deletes the sneaky ignore file
+          touch dist/.nojekyll     # <-- Tells GitHub Pages to leave our files alone
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
