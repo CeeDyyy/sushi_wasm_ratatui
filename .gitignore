@@ -1,0 +1,8 @@
+# Ignore Rust build files
+/target/
+
+# Ignore local WASM outputs (GitHub Actions will build this for us)
+/pkg/
+
+# Ignore Docker stuff (optional, but good practice)
+.dockerignore

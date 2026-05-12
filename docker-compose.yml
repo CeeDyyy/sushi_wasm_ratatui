@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  sushi-app:
+    # This tells Compose to build the Dockerfile in the current directory
+    build: .
+    container_name: sushi-wasm-app
+    ports:
+      # Maps port 8080 on your Windows host to port 80 inside the Nginx container
+      - "8080:80"
+    restart: unless-stopped

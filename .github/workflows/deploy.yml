@@ -1,0 +1,42 @@
+name: Deploy to GitHub Pages
+
+# This tells GitHub to run this action every time you push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+      - master
+
+# Give the action permission to push the compiled files to a new branch
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build WebAssembly Cartridge
+        run: wasm-pack build --target web --release
+
+      - name: Prepare Deployment Folder
+        run: |
+          mkdir dist
+          cp index.html dist/
+          cp -r pkg dist/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
